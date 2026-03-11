@@ -17,7 +17,7 @@ public class FileStocRepository
 
     @Override
     protected Stoc extractEntity(String line) {
-        String[] elems = line.split(";");
+        String[] elems = line.split(",");
 
         int id = Integer.parseInt(elems[0]);
         String ingredient = elems[1];
@@ -29,9 +29,9 @@ public class FileStocRepository
 
     @Override
     protected String createEntityAsString(Stoc entity) {
-        return entity.getId() + ";" +
-                entity.getIngredient() + ";" +
-                entity.getCantitate() + ";" +
+        return entity.getId() + "," +
+                entity.getIngredient() + "," +
+                entity.getCantitate() + "," +
                 entity.getStocMinim();
     }
 }
