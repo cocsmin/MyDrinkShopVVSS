@@ -4,73 +4,95 @@
 top to bottom direction
 skinparam linetype ortho
 
-class AbstractRepository<ID, E>
-enum CategorieBautura << enumeration >>
-class CsvExporter
-class DailyReportService
-class DrinkShopApp
-class DrinkShopController
-class DrinkShopService
-class FileAbstractRepository<ID, E>
-class FileOrderRepository
-class FileProductRepository
-class FileRetetaRepository
-class FileStocRepository
-class IngredientReteta
-class Order
-class OrderItem
-class OrderItemValidator
-class OrderService
-class OrderValidator
-class Product
-class ProductService
-class ProductTest
-class ProductValidator
-class ReceiptGenerator
+' --- Infrastructure & Interfaces ---
 interface Repository<ID, E> << interface >>
-class Reteta
-class RetetaService
-class RetetaValidator
-class Stoc
-class StocService
-class StocValidator
-enum TipBautura << enumeration >>
-class ValidationException
+abstract class AbstractRepository<ID, E>
+abstract class FileAbstractRepository<ID, E>
 interface Validator<T> << interface >>
+class ValidationException
 
-AbstractRepository      -[#008200,dashed]-^  Repository             
-DailyReportService     "1" *-[#595959,plain]-> "repo\n1" Repository             
-DrinkShopController    "1" *-[#595959,plain]-> "service\n1" DrinkShopService       
-DrinkShopController    "1" *-[#595959,plain]-> "newRetetaList\n*" IngredientReteta       
-DrinkShopController    "1" *-[#595959,plain]-> "currentOrder\n1" Order                  
-DrinkShopController    "1" *-[#595959,plain]-> "currentOrderItems\n*" OrderItem              
-DrinkShopController    "1" *-[#595959,plain]-> "productList\n*" Product                
-DrinkShopController    "1" *-[#595959,plain]-> "retetaList\n*" Reteta                 
-DrinkShopService       "1" *-[#595959,plain]-> "report\n1" DailyReportService     
-DrinkShopService       "1" *-[#595959,plain]-> "orderService\n1" OrderService           
-DrinkShopService       "1" *-[#595959,plain]-> "productService\n1" ProductService         
-DrinkShopService       "1" *-[#595959,plain]-> "retetaService\n1" RetetaService          
-DrinkShopService       "1" *-[#595959,plain]-> "stocService\n1" StocService            
-FileAbstractRepository  -[#000082,plain]-^  AbstractRepository     
-FileOrderRepository     -[#000082,plain]-^  FileAbstractRepository 
-FileOrderRepository    "1" *-[#595959,plain]-> "productRepository\n1" Repository             
-FileProductRepository   -[#000082,plain]-^  FileAbstractRepository 
-FileRetetaRepository    -[#000082,plain]-^  FileAbstractRepository 
-FileStocRepository      -[#000082,plain]-^  FileAbstractRepository 
-Order                  "1" *-[#595959,plain]-> "items\n*" OrderItem              
-OrderItem              "1" *-[#595959,plain]-> "product\n1" Product                
-OrderItemValidator      -[#008200,dashed]-^  Validator              
-OrderService           "1" *-[#595959,plain]-> "orderRepo\n1" Repository             
-OrderValidator         "1" *-[#595959,plain]-> "itemValidator\n1" OrderItemValidator     
-OrderValidator          -[#008200,dashed]-^  Validator              
-Product                "1" *-[#595959,plain]-> "categorie\n1" CategorieBautura       
-Product                "1" *-[#595959,plain]-> "tip\n1" TipBautura             
-ProductService         "1" *-[#595959,plain]-> "productRepo\n1" Repository             
-ProductTest            "1" *-[#595959,plain]-> "product\n1" Product                
-ProductValidator        -[#008200,dashed]-^  Validator              
-Reteta                 "1" *-[#595959,plain]-> "ingrediente\n*" IngredientReteta       
-RetetaService          "1" *-[#595959,plain]-> "retetaRepo\n1" Repository             
-RetetaValidator         -[#008200,dashed]-^  Validator              
-StocService            "1" *-[#595959,plain]-> "stocRepo\n1" Repository             
-StocValidator           -[#008200,dashed]-^  Validator              
+' --- UI Layer ---
+' Controller-ul comunică DOAR cu Service-ul (Arhitectură Stratificată)
+class DrinkShopController {
+    - coordinator: DrinkShopService
+    + onAddProduct(): void
+    + onFinalizeOrder(): void
+}
+
+' --- Service Layer (Logic & Coordination) ---
+class DrinkShopService {
+    - salesManager: OrderService
+    - catalogManager: ProductService
+    - recipeManager: RecipeService
+    - inventoryManager: InventoryService
+    + placeOrder(): void
+}
+
+class ProductService
+class OrderService
+class RecipeService
+class InventoryService
+class DailyReportService
+
+' --- Domain Layer (Entități - Independente) ---
+' Aceste clase nu au săgeți care să plece din ele (Persistence Ignorance)
+class Product {
+    - id: int
+    - name: String
+    - price: double
+}
+class Order {
+    - id: int
+    - totalPrice: double
+}
+class OrderItem {
+    - quantity: int
+}
+class Recipe
+class RecipeIngredient
+class StockItem
+
+enum ProductCategory << enumeration >>
+enum DrinkType << enumeration >>
+
+' --- Moștenire și Implementare ---
+AbstractRepository <|-- FileAbstractRepository
+FileAbstractRepository <|-- FileProductRepository
+FileAbstractRepository <|-- FileOrderRepository
+FileAbstractRepository <|-- FileRecipeRepository
+FileAbstractRepository <|-- FileStockRepository
+Repository <|.. AbstractRepository
+
+' --- Relații și Roluri (Corecție A09 & A02) ---
+
+' 1. UI către Service
+DrinkShopController "1" *--> "coordinator\n1" DrinkShopService
+
+' 2. Service Coordonator către Sub-servicii
+DrinkShopService "1" *--> "salesManager\n1" OrderService
+DrinkShopService "1" *--> "catalogManager\n1" ProductService
+DrinkShopService "1" *--> "recipeManager\n1" RecipeService
+DrinkShopService "1" *--> "inventoryManager\n1" InventoryService
+
+' 3. Servicii către Repositorii
+OrderService "1" *--> "persistence\n1" Repository
+ProductService "1" *--> "catalog\n1" Repository
+RecipeService "1" *--> "recipeBook\n1" Repository
+InventoryService "1" *--> "stockData\n1" Repository
+
+' 4. Servicii către Domain (Dependență de utilizare)
+ProductService ..> Product : <<manages>>
+OrderService ..> Order : <<processes>>
+
+' 5. Relații Interne Domain
+Order "1" *-- "lineItems\n*" OrderItem
+OrderItem "1" o-- "orderedProduct\n1" Product
+Recipe "1" *-- "ingredients\n*" RecipeIngredient
+Product "1" *-- "category\n1" ProductCategory
+Product "1" *-- "type\n1" DrinkType
+
+' RecipeService gestionează entitățile de tip Recipe
+RecipeService ..> Recipe : "<<manages>>"
+
+
 @enduml
