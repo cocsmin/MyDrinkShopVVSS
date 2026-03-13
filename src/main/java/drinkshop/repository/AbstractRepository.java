@@ -21,7 +21,7 @@ public abstract class AbstractRepository<ID, E>
 //                    .collect(Collectors.toList());
         // return (List<E>) entities.values();
     }
-C
+
     @Override
     public E save(E entity) {
         entities.put(getId(entity), entity);
