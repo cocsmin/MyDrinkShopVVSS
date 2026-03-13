@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 public class CsvExporter {
+    private CsvExporter() {}
+
     public static void exportOrders(List<Product> products, List<Order> orders, String path) {
         try (FileWriter w = new FileWriter(path)) {
             w.write("OrderId,Product,Quantity,Price\n");
@@ -21,9 +23,9 @@ public class CsvExporter {
                     Product p = products.stream().filter((p1)->i.getProduct().getId()==p1.getId()).toList().get(0);
                     w.write(o.getId() + "," + p.getNume() + "," + i.getQuantity() + "," + i.getTotal() + "\n");
                 }
-                w.write("total order: "+o.getTotal()+" RON\n");
+                w.write("total order: "+o.getTotalPrice()+" RON\n");
                 w.write("-------------------------------\n");
-                sum+=o.getTotal();
+                sum+=o.getTotalPrice();
             }
             String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             w.write("TOTAL OF "+date+" is: "+sum+" RON\n");
