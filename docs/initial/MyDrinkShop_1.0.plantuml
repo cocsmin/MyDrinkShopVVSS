@@ -4,27 +4,28 @@
 top to bottom direction
 skinparam linetype ortho
 
-' --- Infrastructure & Interfaces ---
+' --- 1. Infrastructure & Interfaces ---
 interface Repository<ID, E> << interface >>
 abstract class AbstractRepository<ID, E>
 abstract class FileAbstractRepository<ID, E>
 interface Validator<T> << interface >>
 class ValidationException
 
-' --- UI Layer ---
-' Controller-ul comunică DOAR cu Service-ul (Arhitectură Stratificată)
+' --- 2. UI Layer ---
+class DrinkShopApp
 class DrinkShopController {
     - coordinator: DrinkShopService
     + onAddProduct(): void
     + onFinalizeOrder(): void
 }
 
-' --- Service Layer (Logic & Coordination) ---
+' --- 3. Service Layer ---
 class DrinkShopService {
     - salesManager: OrderService
     - catalogManager: ProductService
     - recipeManager: RecipeService
     - inventoryManager: InventoryService
+    - reportManager: DailyReportService
     + placeOrder(): void
 }
 
@@ -34,8 +35,14 @@ class RecipeService
 class InventoryService
 class DailyReportService
 
-' --- Domain Layer (Entități - Independente) ---
-' Aceste clase nu au săgeți care să plece din ele (Persistence Ignorance)
+' --- 4. Validators (Strategy Pattern) ---
+class ProductValidator
+class OrderValidator
+class OrderItemValidator
+class RecipeValidator
+class StockValidator
+
+' --- 5. Domain Layer (Entities) ---
 class Product {
     - id: int
     - name: String
@@ -43,19 +50,26 @@ class Product {
 }
 class Order {
     - id: int
-    - totalPrice: double
 }
 class OrderItem {
     - quantity: int
 }
 class Recipe
-class RecipeIngredient
-class StockItem
+class RecipeIngredient {
+    - quantity: double
+}
+class StockItem {
+    - quantity: int
+}
 
 enum ProductCategory << enumeration >>
 enum DrinkType << enumeration >>
 
-' --- Moștenire și Implementare ---
+' --- 6. Utilities ---
+class CsvExporter
+class ReceiptGenerator
+
+' --- Inheritance & Implementations ---
 AbstractRepository <|-- FileAbstractRepository
 FileAbstractRepository <|-- FileProductRepository
 FileAbstractRepository <|-- FileOrderRepository
@@ -63,36 +77,57 @@ FileAbstractRepository <|-- FileRecipeRepository
 FileAbstractRepository <|-- FileStockRepository
 Repository <|.. AbstractRepository
 
-' --- Relații și Roluri (Corecție A09 & A02) ---
+ProductValidator ..|> Validator
+OrderValidator ..|> Validator
+OrderItemValidator ..|> Validator
+RecipeValidator ..|> Validator
+StockValidator ..|> Validator
 
-' 1. UI către Service
+' --- Relationships & Roles ---
+
+' UI to Service (A02 Isolation)
 DrinkShopController "1" *--> "coordinator\n1" DrinkShopService
 
-' 2. Service Coordonator către Sub-servicii
+' Main Service to Sub-Services (A08/A09 Roles)
 DrinkShopService "1" *--> "salesManager\n1" OrderService
 DrinkShopService "1" *--> "catalogManager\n1" ProductService
 DrinkShopService "1" *--> "recipeManager\n1" RecipeService
 DrinkShopService "1" *--> "inventoryManager\n1" InventoryService
+DrinkShopService "1" *--> "reportManager\n1" DailyReportService
 
-' 3. Servicii către Repositorii
+' Services to Repositories
 OrderService "1" *--> "persistence\n1" Repository
 ProductService "1" *--> "catalog\n1" Repository
 RecipeService "1" *--> "recipeBook\n1" Repository
 InventoryService "1" *--> "stockData\n1" Repository
+DailyReportService "1" *--> "reportRepo\n1" Repository
 
-' 4. Servicii către Domain (Dependență de utilizare)
-ProductService ..> Product : <<manages>>
-OrderService ..> Order : <<processes>>
+' Services to Validators
+ProductService "1" *--> "validator\n1" ProductValidator
+OrderService "1" *--> "validator\n1" OrderValidator
+RecipeService "1" *--> "validator\n1" RecipeValidator
+InventoryService "1" *--> "validator\n1" StockValidator
 
-' 5. Relații Interne Domain
+' Internal Domain Relationships (A10 Consistency)
 Order "1" *-- "lineItems\n*" OrderItem
-OrderItem "1" o-- "orderedProduct\n1" Product
+OrderItem "1" o-- "purchasedProduct\n1" Product
 Recipe "1" *-- "ingredients\n*" RecipeIngredient
+RecipeIngredient "1" o-- "product\n1" Product
 Product "1" *-- "category\n1" ProductCategory
 Product "1" *-- "type\n1" DrinkType
+StockItem "1" o-- "targetProduct\n1" Product
 
-' RecipeService gestionează entitățile de tip Recipe
-RecipeService ..> Recipe : "<<manages>>"
+' Cross-validator usage
+OrderValidator "1" *--> "itemValidator\n1" OrderItemValidator
 
+' Utility usage
+DailyReportService ..> CsvExporter : <<uses>>
+OrderService ..> ReceiptGenerator : <<uses>>
+
+' Repository-ul foloseste entitatile (Dependency)
+FileProductRepository ..> Product : <<manages>>
+FileOrderRepository ..> Order : <<manages>>
+FileRecipeRepository ..> Recipe : <<manages>>
+FileStockRepository ..> StockItem : <<manages>>
 
 @enduml
