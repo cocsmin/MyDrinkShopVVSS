@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><title>testspec Proiect236 - scir3628_WBT</title>
+<link type="text/css" rel="stylesheet" href="https://www.scs.ubbcluj.ro/testlink/gui/themes/default/css/tl_documents.css" />
+<style type="text/css" media="print">.notprintable { display:none;}</style>
+</head>
+<body>
+<div>
+<div style="float:right;">TestLink Community [configure $tlCfg-&gt;document_generator-&gt;company_name]</div>
+<div>&nbsp;</div><hr />
+<p style="text-align: center;"><img alt="TestLink logo" title="configure using $tlCfg->document_generator->company_logo"  width= height= src="https://www.scs.ubbcluj.ro/testlink/gui/themes/default/images/tl-logo-transparent-25.png" /></p></div>
+<div class="doc_title"><p>Test Specification</p></div>
+<div class="doc_title" style="text-align:left;margin: auto;"><p>Test Project: Proiect236<br/>Test Suite: Proiect236 - scir3628_WBT</p></div>
+<div class="summary"><p id="printedby">Printed by TestLink on 08/05/2026</p></div>
+<div class="pagefooter" id="copyright">2012 &copy; TestLink Community</div>
+<h1 class="general" style="page-break-before: always">Table Of Contents</h1><div class="toc"><p style="padding-left: 20px;"><b><a href="#toc_1">1.scir3628_WBT</a></b></p>
+<p style="padding-left: 45px;"><a href="#toc_tc30733">P236-58: RetetaValidare_Valid</a></p><p style="padding-left: 45px;"><a href="#toc_tc30738">P236-59: RetetaValidare_Invalid</a></p></div><h1 class="doclevel" >Scope</h1>
+<div class="txtlevel"><p>Proiect de testare pentru studentii din grupa 236.</p></div>
+ <br/><a name='toc_1'></a>
+<h1 class='doclevel'>1.Test Suite : scir3628_WBT</h1>
+<div><p>Suita de teste White-Box pentru acoperirea path-urilor din metoda de validare reteta</p>
+</div><a name="toc_tc30733"></a><p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="4">Test Case P236-58: RetetaValidare_Valid&nbsp;<span style="font-size: 80%;">[Version  : 1]</span></th></tr>
+<tr><td width="20%" valign="top"><span class="label">Author:</span></td><td colspan="3">scir3628</td></tr>
+<tr><td colspan="4"><span class="label">Summary:</span><br /><p>Testare White-Box pentru parcurgerea căii principale de execuție (Valid Path), &icirc;n care toate instrucțiunile de validare evaluează condițiile de eroare ca fiind False.</p>
+</td></tr><tr><td colspan="4"><span class="label">Preconditions:</span><br /><p>Obiectul de tip Validator este instanțiat cu succes &icirc;n memoria aplicației.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td></tr><tr><td width="5">1</td><td><p>Se instanțiază un obiect de tip Reteta cu date de intrare complet valide.</p>
+</td><td><p>Obiectul Reteta este stocat &icirc;n memorie cu atributele corect inițializate</p>
+</td></tr><tr><td width="5">2</td><td><p>Se apelează metoda valideazaReteta(reteta) aparțin&acirc;nd clasei Validator</p>
+</td><td><p>Codul &icirc;ncepe evaluarea predicatelor. Condiția &quot;idReteta &lt;= 0&quot; este evaluată ca False. Condiția &quot;numeReteta.isEmpty()&quot; este evaluată ca False. Condiția iterativă &quot;cantitate &lt;= 0&quot; este evaluată ca False. Aplicația nu intră pe nicio ramură de &quot;throw Exception&quot;</p>
+</td></tr><tr><td width="5">3</td><td><p>Se verifică rezultatul returnat de metodă</p>
+</td><td><p>Metoda &icirc;și termină execuția &icirc;n mod natural și returnează &quot;true&quot; (sau se &icirc;ncheie fără excepții). Calea principală din Graful de Flux de Control (CFG) a fost acoperită cu succes</p>
+</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="3">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="3"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Importance:</span></td><td colspan="3">Medium</td></tr>
+<tr><td colspan="4"></td></tr><tr><td > name of the autotest class:</td><td  colspan = "3" ></td></tr>
+<tr><td > name of the test method:</td><td  colspan = "3" ></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Requirements</span><td colspan="3">scir3628_F02:  F02 - Validare Reteta [Version : 1]<br /></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Keywords:</span></td><td colspan="3">&nbsp;None<br/></td></tr>
+</table>
+</div>
+<a name="toc_tc30738"></a><p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="4">Test Case P236-59: RetetaValidare_Invalid&nbsp;<span style="font-size: 80%;">[Version  : 1]</span></th></tr>
+<tr><td width="20%" valign="top"><span class="label">Author:</span></td><td colspan="3">scir3628</td></tr>
+<tr><td colspan="4"><span class="label">Summary:</span><br /><p>Testare White-Box pentru acoperirea ramurii de eroare (Invalid Path) forț&acirc;nd o excepție pe condiția de validare a cantității</p>
+</td></tr><tr><td colspan="4"><span class="label">Preconditions:</span><br /><p>Obiectul de tip Validator este instanțiat</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td></tr><tr><td width="5">1</td><td><p>Se instanțiază un obiect de tip Reteta cu date de intrare intenționat invalide la nivelul cantității. Ex: cantitati = [-10].</p>
+</td><td><p>Obiectul Reteta este creat &icirc;n memorie conțin&acirc;nd datele corupte</p>
+</td></tr><tr><td width="5">2</td><td><p>Se apelează metoda valideazaReteta(reteta) din clasa Validator</p>
+</td><td><p>Codul evaluează predicatele. C&acirc;nd instrucțiunea ajunge la validarea ingredientelor, condiția &quot;cantitate &lt;= 0&quot; este evaluată ca True. Execuția codului intră pe ramura blocului &quot;if&quot; respectiv</p>
+</td></tr><tr><td width="5">3</td><td><p>Se captează ieșirea metodei</p>
+</td><td><p>Instrucțiunea &quot;throw new ValidationException&quot; este executată. Se aruncă o excepție cu mesajul aferent (ex: &quot;Cantitatea ingredientului trebuie sa fie strict pozitiva!&quot;). Restul codului din metodă nu se mai execută. Calea alternativă din CFG este acoperită</p>
+</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="3">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="3"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Importance:</span></td><td colspan="3">Medium</td></tr>
+<tr><td colspan="4"></td></tr><tr><td > name of the autotest class:</td><td  colspan = "3" ></td></tr>
+<tr><td > name of the test method:</td><td  colspan = "3" ></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Requirements</span><td colspan="3">scir3628_F02:  F02 - Validare Reteta [Version : 1]<br /></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Keywords:</span></td><td colspan="3">&nbsp;None<br/></td></tr>
+</table>
+</div>
+
+</body>
+</html>
