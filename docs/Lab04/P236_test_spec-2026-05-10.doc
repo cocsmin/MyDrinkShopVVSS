@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><title>testspec Proiect236 - scir3628_IntT</title>
+<link type="text/css" rel="stylesheet" href="https://www.scs.ubbcluj.ro/testlink/gui/themes/default/css/tl_documents.css" />
+<style type="text/css" media="print">.notprintable { display:none;}</style>
+</head>
+<body>
+<div>
+<div style="float:right;">TestLink Community [configure $tlCfg-&gt;document_generator-&gt;company_name]</div>
+<div>&nbsp;</div><hr />
+<p style="text-align: center;"><img alt="TestLink logo" title="configure using $tlCfg->document_generator->company_logo"  width= height= src="https://www.scs.ubbcluj.ro/testlink/gui/themes/default/images/tl-logo-transparent-25.png" /></p></div>
+<div class="doc_title"><p>Test Specification</p></div>
+<div class="doc_title" style="text-align:left;margin: auto;"><p>Test Project: Proiect236<br/>Test Suite: Proiect236 - scir3628_IntT</p></div>
+<div class="summary"><p id="printedby">Printed by TestLink on 10/05/2026</p></div>
+<div class="pagefooter" id="copyright">2012 &copy; TestLink Community</div>
+<h1 class="general" style="page-break-before: always">Table Of Contents</h1><div class="toc"><p style="padding-left: 20px;"><b><a href="#toc_1">1.scir3628_IntT</a></b></p>
+<p style="padding-left: 45px;"><a href="#toc_tc30819">P236-60: TC01_ProductService_UnitTest</a></p><p style="padding-left: 45px;"><a href="#toc_tc30826">P236-61: TC02_ProductRepository_Integration</a></p><p style="padding-left: 45px;"><a href="#toc_tc30833">P236-62: TC03_FullProductService_Integration</a></p></div><h1 class="doclevel" >Scope</h1>
+<div class="txtlevel"><p>Proiect de testare pentru studentii din grupa 236.</p></div>
+ <br/><a name='toc_1'></a>
+<h1 class='doclevel'>1.Test Suite : scir3628_IntT</h1>
+<div><p>Suită de teste pentru testarea de integrare top-down depth-first a clasei ProductService. Conține c&acirc;te un test case pentru fiecare pas de integrare: unit test pentru S (mock R, mock E), integrare cu R real (mock E), și integrare end-to-end cu toate componentele reale.</p>
+</div><a name="toc_tc30819"></a><p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="4">Test Case P236-60: TC01_ProductService_UnitTest&nbsp;<span style="font-size: 80%;">[Version  : 1]</span></th></tr>
+<tr><td width="20%" valign="top"><span class="label">Author:</span></td><td colspan="3">scir3628</td></tr>
+<tr><td colspan="4"><span class="label">Summary:</span><br /><p>Testarea &icirc;n izolare (unit testing) a clasei ProductService folosind obiecte mock pentru Repository și entitatea Product. Verifică interacțiunile corecte cu toate dependențele mock-uite.</p>
+</td></tr><tr><td colspan="4"><span class="label">Preconditions:</span><br /><p>Mockito 2.x și JUnit 5 configurate &icirc;n pom.xml. Toate dependențele lui ProductService sunt mock-uite cu Mockito.mock(). ProductService instanțiat cu obiectele mock.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td></tr><tr><td width="5">1</td><td><p>Se creează obiectele mock pentru Repository&lt;Integer, Product&gt; și Product folosind Mockito.mock().</p>
+</td><td><p>Obiectele mock sunt create fără erori.</p>
+</td></tr><tr><td width="5">2</td><td><p>Se instanțiază ProductService cu repository-ul mock: new ProductService(productRepoMock).</p>
+</td><td><p>Obiectul productService este creat cu succes.</p>
+</td></tr><tr><td width="5">3</td><td><p>Se setează comportamentul mock-ului: when(productRepo.save(productMock)).thenReturn(productMock).</p>
+</td><td><p>Stub-urile este configurat&nbsp;corect.</p>
+</td></tr><tr><td width="5">4</td><td><p>Se apelează productService.addProduct(productMock).</p>
+</td><td><p>Apelul reușește fără excepții.</p>
+</td></tr><tr><td width="5">5</td><td><p>Se verifică interacțiunile cu mock-urile: verify(productRepo, times(1)).save(productMock).</p>
+</td><td><p>Repository-ul a fost apelat exact o dată cu obiectul Product mock.</p>
+</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="3">Automated</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="3">2.00</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Importance:</span></td><td colspan="3">High</td></tr>
+<tr><td colspan="4"></td></tr><tr><td > name of the autotest class:</td><td  colspan = "3" >drinkshop.ut.service.ProductServiceMockitoTest</td></tr>
+<tr><td > name of the test method:</td><td  colspan = "3" >drinkshop.ut.service.ProductServiceMockitoTest#addProduct_validProduct_callsSave</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Requirements</span><td colspan="3">scir3628_F01:  F01 - Adaugare Produs [Version : 1]<br /></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Keywords:</span></td><td colspan="3">&nbsp;None<br/></td></tr>
+</table>
+</div>
+<a name="toc_tc30826"></a><p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="4">Test Case P236-61: TC02_ProductRepository_Integration&nbsp;<span style="font-size: 80%;">[Version  : 1]</span></th></tr>
+<tr><td width="20%" valign="top"><span class="label">Author:</span></td><td colspan="3">scir3628</td></tr>
+<tr><td colspan="4"><span class="label">Summary:</span><br /><p>Testarea integrării ProductService cu Repository real (FileProductRepository). Entitatea Product răm&acirc;ne mock-uită.</p>
+</td></tr><tr><td colspan="4"><span class="label">Preconditions:</span><br /><p>TC01 trecut cu succes. Fișierul data/products.txt există și conține date inițiale. FileProductRepository instanțiat real, Product mock-uit cu Mockito.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td></tr><tr><td width="5">1</td><td><p>Se instanțiază FileProductRepository real cu calea &quot;data/products.txt&quot;.</p>
+</td><td><p>Repository-ul citește datele din fișier.</p>
+</td></tr><tr><td width="5">2</td><td><p>Se mock-uiește Product cu Mockito.mock(Product.class).</p>
+</td><td><p>Mock-ul Product este creat.</p>
+</td></tr><tr><td width="5">3</td><td><p>Se setează comportamentul mock-ului: getId()&rarr;1, getNume()&rarr;&quot;Limonada&quot;, getPret()&rarr;10.0, getCategorie()&rarr;JUICE</p>
+</td><td><p>Comportamentul mock-ului este definit.</p>
+</td></tr><tr><td width="5">4</td><td><p>Se construiește ProductService cu repository-ul real și se apelează addProduct(productMock).</p>
+</td><td><p>Produsul mock este salvat &icirc;n fișier fără excepții.</p>
+</td></tr><tr><td width="5">5</td><td><p>Se verifică productRepo.findAll().size() (a crescut cu 1).</p>
+</td><td><p>Numărul de produse din repository a crescut corect.</p>
+</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="3">Automated</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="3">2.00</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Importance:</span></td><td colspan="3">High</td></tr>
+<tr><td colspan="4"></td></tr><tr><td > name of the autotest class:</td><td  colspan = "3" >drinkshop.it.service.td.depthfirst.ProductServiceLevel1RepoIntTest</td></tr>
+<tr><td > name of the test method:</td><td  colspan = "3" >drinkshop.it.service.td.depthfirst.ProductServiceLevel1RepoIntTest#addProduct_withRealRepo_savedToFile</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Requirements</span><td colspan="3">scir3628_F01:  F01 - Adaugare Produs [Version : 1]<br /></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Keywords:</span></td><td colspan="3">&nbsp;None<br/></td></tr>
+</table>
+</div>
+<a name="toc_tc30833"></a><p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="4">Test Case P236-62: TC03_FullProductService_Integration&nbsp;<span style="font-size: 80%;">[Version  : 1]</span></th></tr>
+<tr><td width="20%" valign="top"><span class="label">Author:</span></td><td colspan="3">scir3628</td></tr>
+<tr><td colspan="4"><span class="label">Summary:</span><br /><p>Testarea integrării end-to-end ProductService + Repository real + entitatea Product reală. Pasul final al strategiei top-down depth-first - toate componentele reale, fără mock-uri.</p>
+</td></tr><tr><td colspan="4"><span class="label">Preconditions:</span><br /><p>TC02 trecut cu succes. FileProductRepository și obiectele Product sunt reale (fără mock-uri).</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td></tr><tr><td width="5">1</td><td><p>Se instanțiază FileProductRepository real cu calea &quot;data/products.txt&quot;.</p>
+</td><td><p>Repository-ul real este disponibil.</p>
+</td></tr><tr><td width="5">2</td><td><p>Se creează un obiect Product real: new Product(100, &quot;Limonada&quot;, 10.0, CategorieBautura.JUICE.)</p>
+</td><td><p>Obiectul Product real este creat.</p>
+</td></tr><tr><td width="5">3</td><td><p>Se construiește ProductService real cu repository-ul real.</p>
+</td><td><p>Service-ul real este creat.</p>
+</td></tr><tr><td width="5">4</td><td><p>Se apelează productService.addProduct(product) cu produsul real.</p>
+</td><td><p>Produsul real este adăugat &icirc;n repository fără excepții.</p>
+</td></tr><tr><td width="5">5</td><td><p>Se verifică prin productService.getAllProducts() că produsul a fost salvat corect (ID, nume, preț, categorie, tip).</p>
+</td><td><p>Toate proprietățile produsului sunt persistate corect end-to-end.</p>
+</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="3">Automated</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="3">2.00</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Importance:</span></td><td colspan="3">High</td></tr>
+<tr><td colspan="4"></td></tr><tr><td > name of the autotest class:</td><td  colspan = "3" >drinkshop.it.service.td.depthfirst.ProductServiceIntTest</td></tr>
+<tr><td > name of the test method:</td><td  colspan = "3" >drinkshop.it.service.td.depthfirst.ProductServiceIntTest#addProduct_FullIntegration_Success</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Requirements</span><td colspan="3">scir3628_F01:  F01 - Adaugare Produs [Version : 1]<br /></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Keywords:</span></td><td colspan="3">&nbsp;None<br/></td></tr>
+</table>
+</div>
+
+</body>
+</html>
