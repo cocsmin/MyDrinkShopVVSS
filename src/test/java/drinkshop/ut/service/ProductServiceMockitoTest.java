@@ -34,66 +34,111 @@ public class ProductServiceMockitoTest {
         when(product.getNume()).thenReturn("Valid");
         when(product.getPret()).thenReturn(10.0);
 
-        productService.addProduct(product);
+        assertDoesNotThrow(() -> productService.addProduct(product));
+
         verify(repository, times(1)).save(product);
     }
 
     @Test
     void addProduct_ThrowsException_WhenInvalid() {
-        Product invalidP = new Product(1, "", -5, CategorieBautura.JUICE, TipBautura.WATER_BASED);
+        Product mockInvalidP = mock(Product.class);
+        when(mockInvalidP.getNume()).thenReturn("");
 
-        assertThrows(ValidationException.class, () -> productService.addProduct(invalidP));
+        ValidationException exception = assertThrows(ValidationException.class, () -> productService.addProduct(mockInvalidP));
+        assertNotNull(exception);
+
         verify(repository, never()).save(any());
     }
 
+
     @Test
     void findById_CallsRepo() {
-        productService.findById(1);
-        verify(repository).findOne(1);
+        when(repository.findOne(1)).thenReturn(product);
+
+        Product found = productService.findById(1);
+
+        assertNotNull(found);
+        assertSame(product, found);
+
+        verify(repository, times(1)).findOne(1);
     }
 
     @Test
     void deleteProduct_CallsRepo() {
+        when(repository.delete(1)).thenReturn(product);
+
         productService.deleteProduct(1);
-        verify(repository).delete(1);
+
+        verify(repository, times(1)).delete(1);
     }
 
     @Test
     void updateProduct_Success() {
+        when(repository.update(any(Product.class))).thenReturn(product);
+
         productService.updateProduct(1, "New Name", 15.0, CategorieBautura.JUICE, TipBautura.WATER_BASED);
-        verify(repository).update(any(Product.class));
+
+        verify(repository, times(1)).update(any(Product.class));
     }
 
     @Test
     void filterByCategorie_All_ReturnsEverything() {
-        productService.filterByCategorie(CategorieBautura.ALL);
-        verify(repository).findAll();
+        List<Product> mockList = Arrays.asList(product);
+        when(repository.findAll()).thenReturn(mockList);
+
+        List<Product> result = productService.filterByCategorie(CategorieBautura.ALL);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        verify(repository, times(1)).findAll();
     }
 
     @Test
     void filterByCategorie_Specific_FiltersList() {
-        Product p1 = new Product(1, "A", 10, CategorieBautura.JUICE, TipBautura.WATER_BASED);
-        Product p2 = new Product(2, "B", 10, CategorieBautura.TEA, TipBautura.WATER_BASED);
-        when(repository.findAll()).thenReturn(Arrays.asList(p1, p2));
+        Product mockP1 = mock(Product.class);
+        when(mockP1.getCategorie()).thenReturn(CategorieBautura.JUICE);
+
+        Product mockP2 = mock(Product.class);
+        when(mockP2.getCategorie()).thenReturn(CategorieBautura.TEA);
+
+        when(repository.findAll()).thenReturn(Arrays.asList(mockP1, mockP2));
 
         List<Product> result = productService.filterByCategorie(CategorieBautura.JUICE);
 
+        assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(CategorieBautura.JUICE, result.get(0).getCategorie());
+
+        verify(repository, times(1)).findAll();
     }
 
     @Test
     void filterByTip_All_ReturnsEverything() {
-        productService.filterByTip(TipBautura.ALL);
-        verify(repository).findAll();
+        List<Product> mockList = Arrays.asList(product);
+        when(repository.findAll()).thenReturn(mockList);
+
+        List<Product> result = productService.filterByTip(TipBautura.ALL);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        verify(repository, times(1)).findAll();
     }
 
     @Test
     void filterByTip_Specific_FiltersList() {
-        Product p1 = new Product(1, "A", 10, CategorieBautura.JUICE, TipBautura.WATER_BASED);
-        when(repository.findAll()).thenReturn(Arrays.asList(p1));
+        Product mockP1 = mock(Product.class);
+        when(mockP1.getTip()).thenReturn(TipBautura.WATER_BASED);
+
+        when(repository.findAll()).thenReturn(Arrays.asList(mockP1));
 
         List<Product> result = productService.filterByTip(TipBautura.WATER_BASED);
+
+        assertNotNull(result);
         assertEquals(1, result.size());
+        assertEquals(TipBautura.WATER_BASED, result.get(0).getTip());
+
+        verify(repository, times(1)).findAll();
     }
 }
