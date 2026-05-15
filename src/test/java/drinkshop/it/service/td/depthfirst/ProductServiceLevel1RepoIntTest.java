@@ -13,7 +13,7 @@ import java.io.File;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class) // FOARTE IMPORTANT
+@ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductServiceLevel1RepoIntTest {
 
@@ -24,25 +24,22 @@ public class ProductServiceLevel1RepoIntTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // 1. Asigurăm existența folderului și fișierului pentru a evita FileNotFoundException
+
         File folder = new File("data");
         if (!folder.exists()) folder.mkdir();
 
         File file = new File(testFile);
         if (!file.exists()) file.createNewFile();
 
-        // 2. Inițializăm componentele
         repository = new FileProductRepository(testFile);
         productService = new ProductService(repository);
 
-        // 3. Creăm mock-ul manual aici ca să fim siguri că nu e null
         productMock = mock(Product.class);
     }
 
     @Test
     @Order(1)
     void addProduct_Level1_Integration_Success() {
-        // Antrenăm mock-ul
         when(productMock.getId()).thenReturn(101);
         when(productMock.getNume()).thenReturn("Mock Drink");
         when(productMock.getPret()).thenReturn(15.0);
@@ -51,14 +48,12 @@ public class ProductServiceLevel1RepoIntTest {
 
         assertDoesNotThrow(() -> productService.addProduct(productMock));
 
-        // Verificăm integrarea cu Repository-ul real
         assertNotNull(repository.findOne(101));
     }
 
     @Test
     @Order(2)
     void addProduct_Level1_Integration_ValidationFail() {
-        // Setăm mock-ul să returneze un nume invalid (gol)
         when(productMock.getNume()).thenReturn("");
 
         assertThrows(ValidationException.class, () -> productService.addProduct(productMock));

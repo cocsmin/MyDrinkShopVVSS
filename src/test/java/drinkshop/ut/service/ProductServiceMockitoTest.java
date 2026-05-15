@@ -28,8 +28,6 @@ public class ProductServiceMockitoTest {
     @InjectMocks
     private ProductService productService;
 
-    // --- TESTE ADD / VALIDATION ---
-
     @Test
     void addProduct_Success() {
         when(product.getId()).thenReturn(1);
@@ -42,14 +40,11 @@ public class ProductServiceMockitoTest {
 
     @Test
     void addProduct_ThrowsException_WhenInvalid() {
-        // Trimitem un produs cu date invalide (nume gol)
         Product invalidP = new Product(1, "", -5, CategorieBautura.JUICE, TipBautura.WATER_BASED);
 
         assertThrows(ValidationException.class, () -> productService.addProduct(invalidP));
         verify(repository, never()).save(any());
     }
-
-    // --- TESTE FIND / DELETE / UPDATE ---
 
     @Test
     void findById_CallsRepo() {
@@ -69,12 +64,10 @@ public class ProductServiceMockitoTest {
         verify(repository).update(any(Product.class));
     }
 
-    // --- TESTE FILTRARE (Aici atingem ramurile IF pentru coverage) ---
-
     @Test
     void filterByCategorie_All_ReturnsEverything() {
         productService.filterByCategorie(CategorieBautura.ALL);
-        verify(repository).findAll(); // Ramura if (categorie == ALL)
+        verify(repository).findAll();
     }
 
     @Test
@@ -92,7 +85,7 @@ public class ProductServiceMockitoTest {
     @Test
     void filterByTip_All_ReturnsEverything() {
         productService.filterByTip(TipBautura.ALL);
-        verify(repository).findAll(); // Ramura if (tip == ALL)
+        verify(repository).findAll();
     }
 
     @Test

@@ -37,12 +37,10 @@ public class ProductServiceIntTest {
 
         productService.addProduct(p);
 
-        // Verificăm integrarea cu fișierul prin findById
         Product found = productService.findById(1);
         assertNotNull(found);
         assertEquals("Pepsi", found.getNume());
 
-        // Verificăm getAll
         List<Product> all = productService.getAllProducts();
         assertEquals(1, all.size());
     }
